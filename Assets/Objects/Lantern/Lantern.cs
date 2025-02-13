@@ -6,6 +6,7 @@ public class Lantern : MonoBehaviour
     private Animator _animator;
     private GameObject _sprite;
     private VisualEffect _visualEffect;
+    [SerializeField] private AudioSource sfx_burst;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -35,6 +36,7 @@ public class Lantern : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             _animator.SetTrigger("Burst");
+            sfx_burst.Play();
         }
         _visualEffect.SetVector3("BurstPosition", transform.position);
         _visualEffect.SendEvent("LanternBurst");
@@ -45,4 +47,8 @@ public class Lantern : MonoBehaviour
     {
         Destroy(gameObject);
     }
+}
+
+internal class VAudioClip
+{
 }

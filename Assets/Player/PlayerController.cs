@@ -10,6 +10,14 @@ public class PlayerController : MonoBehaviour
     public int maxJumpCount = 2;
     public LayerMask groundLayer;
     public VisualEffect landingEffect;
+    public float maxFallSpeed = -20f;
+
+    // sound effects
+    [SerializeField]
+    AudioSource sfx;
+    [SerializeField]
+    AudioClip sfx_landing;
+
     private Rigidbody2D _rb;
     private GameObject _sprite;
     private Animator _animator;
@@ -104,6 +112,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (_velocity.y < maxFallSpeed) _velocity.y = maxFallSpeed;
         _rb.linearVelocity = _velocity;
 
         if (_jumpPressed)
@@ -128,7 +137,7 @@ public class PlayerController : MonoBehaviour
     void OnGroundCheck()
     {
         _preOnGround = _onGround;
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 0.05f, groundLayer);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 0.3f, groundLayer);
 
         if (hit.collider != null)
         {
@@ -148,6 +157,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Landing");
             _jumpCount = 0;
             landingEffect.SendEvent("PlayerLanding");
+            sfx.Play();
         }
     }
 

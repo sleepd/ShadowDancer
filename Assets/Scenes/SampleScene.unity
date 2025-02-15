@@ -6860,6 +6860,7 @@ GameObject:
   - component: {fileID: 519420033}
   - component: {fileID: 519420034}
   - component: {fileID: 519420035}
+  - component: {fileID: 519420036}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -6948,7 +6949,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
   m_Name: 
@@ -7041,6 +7042,24 @@ MonoBehaviour:
   m_CropFrameX: 0
   m_CropFrameY: 0
   m_StretchFill: 0
+--- !u!114 &519420036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15f89069855118a41a79b128951c8ee8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1873912538}
+  lookAhead: 1
+  screenOffset: {x: 0, y: 3}
+  aheadDistance: {x: 3, y: 1}
+  moveSpeed: {x: 4, y: 8}
+  zDistance: -10
 --- !u!4 &533211308 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 14780179078318007, guid: 2631358d2d19f0245bdbf46eb432a158, type: 3}
@@ -11662,7 +11681,95 @@ Tilemap:
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1
-  m_AnimatedTiles: {}
+  - first: {x: -56, y: -3, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 8
+      m_TileSpriteIndex: 8
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 0
+  - first: {x: -56, y: -2, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 8
+      m_TileSpriteIndex: 8
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 0
+  - first: {x: -56, y: -1, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 8
+      m_TileSpriteIndex: 8
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 0
+  - first: {x: -56, y: 0, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 8
+      m_TileSpriteIndex: 8
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 0
+  m_AnimatedTiles:
+  - first: {x: -56, y: -3, z: 0}
+    second:
+      serializedVersion: 2
+      m_AnimatedSprites:
+      - {fileID: 4721293536888397434, guid: ea3d66a7edd9d46d38e40be89ae8d3cf, type: 3}
+      - {fileID: 5364352939883245045, guid: ea3d66a7edd9d46d38e40be89ae8d3cf, type: 3}
+      - {fileID: 7196270143389622831, guid: ea3d66a7edd9d46d38e40be89ae8d3cf, type: 3}
+      - {fileID: 6029957480157117390, guid: ea3d66a7edd9d46d38e40be89ae8d3cf, type: 3}
+      - {fileID: -2507161886035769597, guid: ea3d66a7edd9d46d38e40be89ae8d3cf, type: 3}
+      m_AnimationSpeed: 10
+      m_AnimationTimeOffset: 0
+      m_Flags: 0
+  - first: {x: -56, y: -2, z: 0}
+    second:
+      serializedVersion: 2
+      m_AnimatedSprites:
+      - {fileID: 4721293536888397434, guid: ea3d66a7edd9d46d38e40be89ae8d3cf, type: 3}
+      - {fileID: 5364352939883245045, guid: ea3d66a7edd9d46d38e40be89ae8d3cf, type: 3}
+      - {fileID: 7196270143389622831, guid: ea3d66a7edd9d46d38e40be89ae8d3cf, type: 3}
+      - {fileID: 6029957480157117390, guid: ea3d66a7edd9d46d38e40be89ae8d3cf, type: 3}
+      - {fileID: -2507161886035769597, guid: ea3d66a7edd9d46d38e40be89ae8d3cf, type: 3}
+      m_AnimationSpeed: 10
+      m_AnimationTimeOffset: 0
+      m_Flags: 0
+  - first: {x: -56, y: -1, z: 0}
+    second:
+      serializedVersion: 2
+      m_AnimatedSprites:
+      - {fileID: 4721293536888397434, guid: ea3d66a7edd9d46d38e40be89ae8d3cf, type: 3}
+      - {fileID: 5364352939883245045, guid: ea3d66a7edd9d46d38e40be89ae8d3cf, type: 3}
+      - {fileID: 7196270143389622831, guid: ea3d66a7edd9d46d38e40be89ae8d3cf, type: 3}
+      - {fileID: 6029957480157117390, guid: ea3d66a7edd9d46d38e40be89ae8d3cf, type: 3}
+      - {fileID: -2507161886035769597, guid: ea3d66a7edd9d46d38e40be89ae8d3cf, type: 3}
+      m_AnimationSpeed: 10
+      m_AnimationTimeOffset: 0
+      m_Flags: 0
+  - first: {x: -56, y: 0, z: 0}
+    second:
+      serializedVersion: 2
+      m_AnimatedSprites:
+      - {fileID: 4721293536888397434, guid: ea3d66a7edd9d46d38e40be89ae8d3cf, type: 3}
+      - {fileID: 5364352939883245045, guid: ea3d66a7edd9d46d38e40be89ae8d3cf, type: 3}
+      - {fileID: 7196270143389622831, guid: ea3d66a7edd9d46d38e40be89ae8d3cf, type: 3}
+      - {fileID: 6029957480157117390, guid: ea3d66a7edd9d46d38e40be89ae8d3cf, type: 3}
+      - {fileID: -2507161886035769597, guid: ea3d66a7edd9d46d38e40be89ae8d3cf, type: 3}
+      m_AnimationSpeed: 10
+      m_AnimationTimeOffset: 0
+      m_Flags: 0
   m_TileAssetArray:
   - m_RefCount: 14
     m_Data: {fileID: 11400000, guid: 5f1ebefbafc1d0741bf67f5f15ac3bbe, type: 2}
@@ -11680,6 +11787,8 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: e53a69568423f1948a1dd245702fb23e, type: 2}
   - m_RefCount: 24
     m_Data: {fileID: 11400000, guid: f4d37495d6072f5409823e4bf0dcdbd9, type: 2}
+  - m_RefCount: 4
+    m_Data: {fileID: 11400000, guid: 9dd53890973a7624a839bc244aa15c32, type: 2}
   m_TileSpriteArray:
   - m_RefCount: 14
     m_Data: {fileID: -2095638590, guid: b67d4507c311a904aa3ec911e891e73e, type: 3}
@@ -11697,8 +11806,10 @@ Tilemap:
     m_Data: {fileID: -282942379, guid: b67d4507c311a904aa3ec911e891e73e, type: 3}
   - m_RefCount: 24
     m_Data: {fileID: 1171956826, guid: b67d4507c311a904aa3ec911e891e73e, type: 3}
+  - m_RefCount: 4
+    m_Data: {fileID: -2507161886035769597, guid: ea3d66a7edd9d46d38e40be89ae8d3cf, type: 3}
   m_TileMatrixArray:
-  - m_RefCount: 313
+  - m_RefCount: 317
     m_Data:
       e00: 1
       e01: 0
@@ -11717,13 +11828,13 @@ Tilemap:
       e32: 0
       e33: 1
   m_TileColorArray:
-  - m_RefCount: 313
+  - m_RefCount: 317
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Origin: {x: -54, y: -11, z: 0}
-  m_Size: {x: 85, y: 11, z: 1}
+  m_Origin: {x: -56, y: -11, z: 0}
+  m_Size: {x: 87, y: 12, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
@@ -12112,7 +12223,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1214822237}
   - component: {fileID: 1214822236}
-  - component: {fileID: 1214822235}
   - component: {fileID: 1214822238}
   m_Layer: 0
   m_Name: CinemachineCamera
@@ -12120,38 +12230,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1214822235
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1214822234}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 886251e9a18ece04ea8e61686c173e1b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CameraDistance: 10
-  DeadZoneDepth: 0
-  Composition:
-    ScreenPosition: {x: 0, y: 0.18}
-    DeadZone:
-      Enabled: 1
-      Size: {x: 0.15, y: 0.1}
-    HardLimits:
-      Enabled: 0
-      Size: {x: 0.8, y: 0.8}
-      Offset: {x: 0, y: 0}
-  CenterOnActivate: 1
-  TargetOffset: {x: 0, y: 0, z: 0}
-  Damping: {x: 0.5, y: 0.5, z: 1}
-  Lookahead:
-    Enabled: 1
-    Time: 0.15
-    Smoothing: 0
-    IgnoreY: 0
+  m_IsActive: 0
 --- !u!114 &1214822236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12159,7 +12238,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1214822234}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
   m_Name: 
@@ -12217,13 +12296,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1214822234}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f453f694addf4275988fac205bc91968, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   BoundingShape2D: {fileID: 1482531778}
-  Damping: 5
+  Damping: 0
   SlowingDistance: 5
   OversizeWindow:
     Enabled: 0
@@ -13323,6 +13402,8 @@ MonoBehaviour:
     m_Bits: 64
   landingEffect: {fileID: 3915860}
   maxFallSpeed: -30
+  faceing: 1
+  footCheckDistance: 0.75
   sfx: {fileID: 844347437}
   sfx_landing: {fileID: 0}
   _jumpCooldown: 0.1

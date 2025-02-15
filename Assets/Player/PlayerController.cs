@@ -11,7 +11,11 @@ public class PlayerController : MonoBehaviour
     public LayerMask groundLayer;
     public VisualEffect landingEffect;
     public float maxFallSpeed = -20f;
+    public int faceing = 1;
+    public Vector2 velocity { get => _velocity;}
 
+    [HideInInspector] public bool onGround {get => _onGround;}
+    [SerializeField] float footCheckDistance;
     // sound effects
     [SerializeField]
     AudioSource sfx;
@@ -84,8 +88,10 @@ public class PlayerController : MonoBehaviour
         // fall
         if (!_onGround)
         {
-            if (_preVelocity.y >= 0 && _velocity.y < 0){
+            if ( _preVelocity.y >= 0 && _velocity.y < 0f)
+            {
                 _animator.SetTrigger("FallStart");
+                Debug.Log("Start Falling");
             }
         }
 
@@ -100,8 +106,16 @@ public class PlayerController : MonoBehaviour
         if(inputX != 0)
         {
             _animator.SetBool("Running", true);
-            if(inputX < 0) _sprite.transform.localScale = new Vector2(1, 1);
-            if(inputX > 0) _sprite.transform.localScale = new Vector2(-1, 1);
+            if(inputX < 0)
+            {
+                _sprite.transform.localScale = new Vector2(1, 1);
+                faceing = -1;
+            }
+            if(inputX > 0)
+            {
+                _sprite.transform.localScale = new Vector2(-1, 1);
+                faceing = 1;
+            }
         }
         else
         {
@@ -127,6 +141,7 @@ public class PlayerController : MonoBehaviour
     void Jump()
     {
         _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, jumpForce);
+        _animator.ResetTrigger("Landing");
         _animator.SetTrigger("JumpStart");
         _jumpCooldownTimer = _jumpCooldown;
     }
@@ -137,9 +152,18 @@ public class PlayerController : MonoBehaviour
     void OnGroundCheck()
     {
         _preOnGround = _onGround;
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 0.3f, groundLayer);
+        Vector3 leftFeetPosition = transform.position;
+        Vector3 rightFeetPositon = transform.position;
+        leftFeetPosition.x -= footCheckDistance;
+        rightFeetPositon.x += footCheckDistance;
 
-        if (hit.collider != null)
+        RaycastHit2D leftFeetCheck = Physics2D.Raycast(leftFeetPosition, Vector2.down, 0.3f, groundLayer);
+        RaycastHit2D rightFeetCheck = Physics2D.Raycast(rightFeetPositon, Vector2.down, 0.3f, groundLayer);
+
+        Debug.DrawLine(leftFeetPosition, new Vector3(leftFeetPosition.x, leftFeetPosition.y - 0.3f, leftFeetPosition.z),Color.red);
+        Debug.DrawLine(rightFeetPositon, new Vector3(rightFeetPositon.x, rightFeetPositon.y - 0.3f, rightFeetPositon.z),Color.red);
+
+        if (leftFeetCheck.collider != null || rightFeetCheck.collider != null)
         {
             _onGround = true;
         }
@@ -166,6 +190,6 @@ public class PlayerController : MonoBehaviour
         _animator.ResetTrigger("Landing");
     }
 
-
+    
 
 }

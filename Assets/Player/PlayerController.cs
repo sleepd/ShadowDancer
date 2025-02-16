@@ -98,7 +98,8 @@ public class PlayerController : MonoBehaviour
             {
                 _animator.SetTrigger("FallStart");
                 Debug.Log("Start Falling");
-
+                // if the player is falling, set the jumpCount to 1
+                _jumpCount = 1;
             }
         }
 

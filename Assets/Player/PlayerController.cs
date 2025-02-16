@@ -5,6 +5,9 @@ using UnityEngine;
 using UnityEngine.VFX;
 public class PlayerController : MonoBehaviour
 {
+    public int hp {get => _currentHp;}
+    [SerializeField] private int _maxHp;
+    private int _currentHp;
     public float moveSpeed = 5f;
     public float jumpForce = 5f;
     public int maxJumpCount = 2;
@@ -51,6 +54,7 @@ public class PlayerController : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _sprite = transform.Find("Sprite").gameObject;
         _animator = _sprite.GetComponent<Animator>();
+        _currentHp = _maxHp;
     }
 
     // Update is called once per frame
@@ -206,6 +210,7 @@ public class PlayerController : MonoBehaviour
         {
             Vector2 safePosition = FindLastSafeGroundPosition();
             transform.position = safePosition;
+            TakeFallDamage();
         }
     }
 
@@ -276,4 +281,12 @@ public class PlayerController : MonoBehaviour
         
         return safePosition;
     }
+
+    void TakeFallDamage()
+    {
+        int damage = _maxHp / 5;
+        _currentHp -= damage;
+        Debug.Log($"Take {damage} damage");
+        Debug.Log($"Current HP: {_currentHp}");
+    }   
 }

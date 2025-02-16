@@ -10,8 +10,13 @@ public class CameraController : MonoBehaviour
     [SerializeField] Vector2 moveSpeed;
     [SerializeField] float zDistance = 100f;
 
+    [Header("Confiner")]
+    [SerializeField] BoxCollider2D boundingBox;
+
     Vector2 _targetPosition = new();
     Vector2 _currentOffset = new();
+    float _horizExtent = 20;
+    float _vertExtent = 11.25f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -21,7 +26,6 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
             Vector2 basePosition = GetBasePosition();
             Vector2 currentPosition = basePosition + _currentOffset;
             // calculate x axis offset
@@ -36,14 +40,23 @@ public class CameraController : MonoBehaviour
             {
                 _currentOffset += moveSpeed * Time.deltaTime * (_targetPosition - currentPosition).normalized;
             }
-
-            
             Vector3 position = basePosition + _currentOffset;
-            position.z = zDistance;
-            transform.position = position;
+            // check the bounding box
+            if (boundingBox != null)
+            {
+                
+
+                // 计算考虑相机视野后的边界
+                float minX = boundingBox.bounds.min.x + _horizExtent;
+                float maxX = boundingBox.bounds.max.x - _horizExtent;
+                float minY = boundingBox.bounds.min.y + _vertExtent;
+                float maxY = boundingBox.bounds.max.y - _vertExtent;
+                position.x = Mathf.Clamp(position.x, minX, maxX);
+                position.y = Mathf.Clamp(position.y, minY, maxY);
+            }
             
-
-
+            position.z = zDistance;
+            transform.position = position;            
     }
 
     Vector2 GetBasePosition()

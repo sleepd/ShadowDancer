@@ -93,6 +93,13 @@ public class PlayerController : MonoBehaviour
                 _animator.SetTrigger("FallStart");
                 Debug.Log("Start Falling");
             }
+            
+            else if (_preOnGround && _velocity.y < 0f)
+            {
+                _animator.SetTrigger("FallStart");
+                Debug.Log("Start Falling");
+
+            }
         }
 
         float inputX = Input.GetAxisRaw("Horizontal");
@@ -122,6 +129,7 @@ public class PlayerController : MonoBehaviour
             _animator.SetBool("Running", false);
         }
         _preVelocity = _velocity;
+        _preOnGround = _onGround;
     }
 
     void FixedUpdate()

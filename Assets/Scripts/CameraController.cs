@@ -3,15 +3,16 @@ using UnityEngine.TextCore.Text;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] PlayerController player;
-    [SerializeField] bool lookAhead = true;
-    [SerializeField] Vector2 screenOffset = Vector2.zero;
-    [SerializeField] Vector2 aheadDistance;
-    [SerializeField] Vector2 moveSpeed;
-    [SerializeField] float zDistance = 100f;
+    [SerializeField] PlayerController player; // the player object
+    [SerializeField] bool lookAhead = true; // if the camera should look ahead
+    [SerializeField] Vector2 screenOffset = Vector2.zero; // the offset of the camera from the player
+    [SerializeField] Vector2 aheadDistance; // the distance the camera should look ahead
+    [SerializeField] float moveSpeed; // the following speed of the camera
+    [SerializeField] float zDistance = 100f; // the distance of the camera from the player in the z axis
+    [SerializeField] float snapThreshold = 0.5f; // the threshold for the camera to snap to the target position
 
     [Header("Confiner")]
-    [SerializeField] BoxCollider2D boundingBox;
+    [SerializeField] BoxCollider2D boundingBox; // the bounding box of the camera
 
     Vector2 _targetPosition = new();
     Vector2 _currentOffset = new();
@@ -27,26 +28,36 @@ public class CameraController : MonoBehaviour
     void Update()
     {
             Vector2 basePosition = GetBasePosition();
-            Vector2 currentPosition = basePosition + _currentOffset;
-            // calculate x axis offset
-            _targetPosition.x = basePosition.x + aheadDistance.x * player.faceing;
-
-            // calulate y axis offset
-            if (!player.onGround) _targetPosition.y = basePosition.y - aheadDistance.y;
-            // else if (player.velocity.y < 0) _targetPosition.y = basePosition.y - aheadDistance;
-            else _targetPosition.y = basePosition.y;
-
-            if (Vector2.Distance(currentPosition, _targetPosition) > 0.1f)
+            if (!lookAhead)
             {
-                _currentOffset += moveSpeed * Time.deltaTime * (_targetPosition - currentPosition).normalized;
+                _currentOffset = Vector2.zero;
+                _targetPosition = basePosition;
             }
+            else
+            {
+                Vector2 currentPosition = basePosition + _currentOffset;
+                // calculate x axis offset
+                _targetPosition.x = basePosition.x + aheadDistance.x * player.faceing;
+
+                // calulate y axis offset
+                if (!player.onGround) _targetPosition.y = basePosition.y - aheadDistance.y;
+                else _targetPosition.y = basePosition.y;
+
+                // calculate the cameraoffset
+                if (Vector2.Distance(currentPosition, _targetPosition) > snapThreshold)
+                {
+                    _currentOffset = Vector2.Lerp(_currentOffset, _targetPosition - currentPosition, moveSpeed * Time.deltaTime);
+                }
+                else
+                {
+                    _currentOffset = _targetPosition - currentPosition;
+                }
+            }
+            // calculate the new position
             Vector3 position = basePosition + _currentOffset;
             // check the bounding box
             if (boundingBox != null)
             {
-                
-
-                // 计算考虑相机视野后的边界
                 float minX = boundingBox.bounds.min.x + _horizExtent;
                 float maxX = boundingBox.bounds.max.x - _horizExtent;
                 float minY = boundingBox.bounds.min.y + _vertExtent;
@@ -55,6 +66,7 @@ public class CameraController : MonoBehaviour
                 position.y = Mathf.Clamp(position.y, minY, maxY);
             }
             
+            // set the position
             position.z = zDistance;
             transform.position = position;            
     }

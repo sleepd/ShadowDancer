@@ -197,7 +197,4 @@ public class PlayerController : MonoBehaviour
     {
         _animator.ResetTrigger("Landing");
     }
-
-    
-
 }

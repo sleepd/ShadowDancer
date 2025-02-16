@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
     // for landing animation
     private bool _preOnGround = true;
 
-
+    private Vector2 _lastOnGroundPosition;
 
     // Start is called before the first frame update
     void Start()
@@ -174,6 +174,7 @@ public class PlayerController : MonoBehaviour
         if (leftFeetCheck.collider != null || rightFeetCheck.collider != null)
         {
             _onGround = true;
+            _lastOnGroundPosition = transform.position;
         }
         else
         {
@@ -196,5 +197,82 @@ public class PlayerController : MonoBehaviour
     public void OnLandingAnimationEnd()
     {
         _animator.ResetTrigger("Landing");
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("DeadZone"))
+        {
+            Vector2 safePosition = FindLastSafeGroundPosition();
+            transform.position = safePosition;
+        }
+    }
+
+    Vector2 FindLastSafeGroundPosition()
+    {
+        Vector2 safePosition = _lastOnGroundPosition;
+        float checkStep = footCheckDistance; // footCheckDistance
+        float maxCheckDistance = 1f; // maxCheckDistance
+        float checkWidth = 0.5f; // checkWidth
+        
+        for (float distance = checkStep; distance <= maxCheckDistance; distance += checkStep)
+        {
+            // leftBasePosition
+            Vector3 leftBasePosition = safePosition;
+            leftBasePosition.x -= distance;
+            
+            // leftPoint1
+            Vector3 leftPoint1 = leftBasePosition;
+            leftPoint1.x -= checkWidth/2;
+            
+            // leftPoint2
+            Vector3 leftPoint2 = leftBasePosition;
+            leftPoint2.x += checkWidth/2;
+            
+            RaycastHit2D leftCheck1 = Physics2D.Raycast(leftPoint1, Vector2.down, 0.3f, groundLayer);
+            RaycastHit2D leftCheck2 = Physics2D.Raycast(leftPoint2, Vector2.down, 0.3f, groundLayer);
+            
+            // rightBasePosition
+            Vector3 rightBasePosition = safePosition;
+            rightBasePosition.x += distance;
+            
+            // rightPoint1
+            Vector3 rightPoint1 = rightBasePosition;
+            rightPoint1.x -= checkWidth/2;
+            
+            // rightPoint2
+            Vector3 rightPoint2 = rightBasePosition;
+            rightPoint2.x += checkWidth/2;
+            
+            RaycastHit2D rightCheck1 = Physics2D.Raycast(rightPoint1, Vector2.down, 0.3f, groundLayer);
+            RaycastHit2D rightCheck2 = Physics2D.Raycast(rightPoint2, Vector2.down, 0.3f, groundLayer);
+            
+            // Debug info 
+            Debug.DrawLine(leftPoint1, new Vector3(leftPoint1.x, leftPoint1.y - 0.3f, leftPoint1.z), Color.yellow);
+            Debug.DrawLine(leftPoint2, new Vector3(leftPoint2.x, leftPoint2.y - 0.3f, leftPoint2.z), Color.yellow);
+            Debug.DrawLine(rightPoint1, new Vector3(rightPoint1.x, rightPoint1.y - 0.3f, rightPoint1.z), Color.yellow);
+            Debug.DrawLine(rightPoint2, new Vector3(rightPoint2.x, rightPoint2.y - 0.3f, rightPoint2.z), Color.yellow);
+            
+            // if both leftCheck1 and leftCheck2 are on the ground
+            if (leftCheck1.collider != null && leftCheck2.collider != null)
+            {
+                Debug.Log($"Found safe position on left at distance: {distance}");
+                safePosition.x = leftBasePosition.x;
+                break;
+            }
+            else if (rightCheck1.collider != null && rightCheck2.collider != null)
+            {
+                Debug.Log($"Found safe position on right at distance: {distance}");
+                safePosition.x = rightBasePosition.x;
+                break;
+            }
+            
+            if (distance >= maxCheckDistance)
+            {
+                Debug.LogWarning("No safe position found within range");
+            }
+        }
+        
+        return safePosition;
     }
 }

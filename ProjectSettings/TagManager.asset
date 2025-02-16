@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - VFX Lantern Broken
+  - DeadZone
   layers:
   - Default
   - TransparentFX

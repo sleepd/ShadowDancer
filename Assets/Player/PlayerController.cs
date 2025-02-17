@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour
     private bool _preOnGround = true;
 
     private Vector2 _lastOnGroundPosition;
+    private bool _invincible = false;
 
     // Start is called before the first frame update
     void Start()
@@ -81,6 +82,12 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Double Jump");
             }
 
+        }
+
+        // dash
+        if (Input.GetButtonDown("Dash"))
+        {
+            _dashPressed = true;
         }
 
         if (_jumpCooldownTimer > 0)
@@ -253,22 +260,14 @@ public class PlayerController : MonoBehaviour
             RaycastHit2D rightCheck1 = Physics2D.Raycast(rightPoint1, Vector2.down, 0.3f, groundLayer);
             RaycastHit2D rightCheck2 = Physics2D.Raycast(rightPoint2, Vector2.down, 0.3f, groundLayer);
             
-            // Debug info 
-            Debug.DrawLine(leftPoint1, new Vector3(leftPoint1.x, leftPoint1.y - 0.3f, leftPoint1.z), Color.yellow);
-            Debug.DrawLine(leftPoint2, new Vector3(leftPoint2.x, leftPoint2.y - 0.3f, leftPoint2.z), Color.yellow);
-            Debug.DrawLine(rightPoint1, new Vector3(rightPoint1.x, rightPoint1.y - 0.3f, rightPoint1.z), Color.yellow);
-            Debug.DrawLine(rightPoint2, new Vector3(rightPoint2.x, rightPoint2.y - 0.3f, rightPoint2.z), Color.yellow);
-            
             // if both leftCheck1 and leftCheck2 are on the ground
             if (leftCheck1.collider != null && leftCheck2.collider != null)
             {
-                Debug.Log($"Found safe position on left at distance: {distance}");
                 safePosition.x = leftBasePosition.x;
                 break;
             }
             else if (rightCheck1.collider != null && rightCheck2.collider != null)
             {
-                Debug.Log($"Found safe position on right at distance: {distance}");
                 safePosition.x = rightBasePosition.x;
                 break;
             }
@@ -276,6 +275,7 @@ public class PlayerController : MonoBehaviour
             if (distance >= maxCheckDistance)
             {
                 Debug.LogWarning("No safe position found within range");
+                // should restart game here
             }
         }
         
@@ -288,5 +288,20 @@ public class PlayerController : MonoBehaviour
         _currentHp -= damage;
         Debug.Log($"Take {damage} damage");
         Debug.Log($"Current HP: {_currentHp}");
-    }   
+        SetInvincible(1f);
+
+    }
+
+    void SetInvincible(float duration)
+    {
+        _invincible = true;
+        Invoke("ResetInvincible", duration);
+        _animator.SetBool("Twinkling", true);
+    }
+
+    void ResetInvincible()
+    {
+        _invincible = false;
+        _animator.SetBool("Twinkling", false);
+    }
 }

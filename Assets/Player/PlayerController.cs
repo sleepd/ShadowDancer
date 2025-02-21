@@ -49,6 +49,16 @@ public class PlayerController : MonoBehaviour
     private Vector2 _lastOnGroundPosition;
     private bool _invincible = false;
 
+    // dash properties
+    [Header("Dash")]
+    private bool _dashPressed = false;
+    private int _dashCount = 0;
+    [SerializeField] private int _maxDashCount = 1;
+    [SerializeField] private float _dashSpeed = 10f;
+    [SerializeField] private float _dashDuration = 0.5f;
+    [SerializeField] private float _dashCooldown = 1f;
+    private float _dashCooldownTimer = 0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -65,35 +75,12 @@ public class PlayerController : MonoBehaviour
         OnGroundCheck();
         LandingCheck();
 
-        // jump
-        if (Input.GetButtonDown("Jump") && _jumpCooldownTimer <= 0)
-        {
-            if (_onGround)
-            {
-                _jumpPressed = true;
-                _jumpCount++;
-                Debug.Log("Jump");
-            }
+        // input check
+        ButtonCheck();
+        
+        
 
-            else if (_jumpCount < maxJumpCount)
-            {
-                _jumpPressed = true;
-                _jumpCount++;
-                Debug.Log("Double Jump");
-            }
-
-        }
-
-        // dash
-        if (Input.GetButtonDown("Dash"))
-        {
-            _dashPressed = true;
-        }
-
-        if (_jumpCooldownTimer > 0)
-        {
-            _jumpCooldownTimer -= Time.deltaTime;
-        }
+        
 
 
         // fall
@@ -154,6 +141,12 @@ public class PlayerController : MonoBehaviour
             Jump();
             _jumpPressed = false;
         }
+
+        if (_dashPressed)
+        {
+            Dash();
+            _dashPressed = false;
+        }
     }
 
 
@@ -164,6 +157,13 @@ public class PlayerController : MonoBehaviour
         _animator.ResetTrigger("Landing");
         _animator.SetTrigger("JumpStart");
         _jumpCooldownTimer = _jumpCooldown;
+    }
+
+    void Dash()
+    {
+        _rb.linearVelocity = new Vector2(_rb.linearVelocity.x + _dashSpeed * faceing, 0);
+        _animator.ResetTrigger("Landing");
+        
     }
 
 
@@ -201,6 +201,7 @@ public class PlayerController : MonoBehaviour
             _animator.SetTrigger("Landing");
             Debug.Log("Landing");
             _jumpCount = 0;
+            _dashCount = 0;
             landingEffect.SendEvent("PlayerLanding");
             sfx.Play();
         }
@@ -304,4 +305,47 @@ public class PlayerController : MonoBehaviour
         _invincible = false;
         _animator.SetBool("Twinkling", false);
     }
+
+    void ButtonCheck()
+    {
+        // jump
+        if (Input.GetButtonDown("Jump") && _jumpCooldownTimer <= 0)
+        {
+            if (_onGround)
+            {
+                _jumpPressed = true;
+                _jumpCount++;
+                Debug.Log("Jump");
+            }
+
+            else if (_jumpCount < maxJumpCount)
+            {
+                _jumpPressed = true;
+                _jumpCount++;
+                Debug.Log("Double Jump");
+            }
+
+        }
+        if (_jumpCooldownTimer > 0)
+        {
+            _jumpCooldownTimer -= Time.deltaTime;
+        }
+
+        // dash
+        if (Input.GetButtonDown("Dash"))
+        {
+            if (_dashCooldownTimer <= 0 && _dashCount < _maxDashCount)
+            {
+                _dashPressed = true;
+                _dashCount++;
+                _dashCooldownTimer = _dashCooldown;
+                Debug.Log("Dash");
+            }
+        }
+        if (_dashCooldownTimer > 0)
+        {
+            _dashCooldownTimer -= Time.deltaTime;
+        }
+    }
+        
 }

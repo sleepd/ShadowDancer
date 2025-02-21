@@ -347,5 +347,10 @@ public class PlayerController : MonoBehaviour
             _dashCooldownTimer -= Time.deltaTime;
         }
     }
+
+    public float GetHpPercentage()
+    {
+        return (float)_currentHp / _maxHp;
+    }
         
 }

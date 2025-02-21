@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: cdf81861adcaeff4caa7249e5d3b7ce0
+guid: a06f0cb1dd15fc6408260f87be3de8f7
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7516342049021962738
-    second: Dialogue_0
+      213: 5932526129379059671
+    second: DialogueArrow_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -48,11 +48,11 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 1
   spriteExtrude: 1
-  spriteMeshType: 0
+  spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 8
-  spriteBorder: {x: 16, y: 16, z: 16, w: 16}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -113,23 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Dialogue_0
+      name: DialogueArrow_0
       rect:
         serializedVersion: 2
-        x: 10
-        y: 8
-        width: 28
-        height: 28
+        x: 0
+        y: 0
+        width: 6
+        height: 6
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 5, y: 5, z: 5, w: 4}
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e06d6bdcab690b790800000000000000
-      internalID: -7516342049021962738
+      spriteID: 7d7ac523511945250800000000000000
+      internalID: 5932526129379059671
       vertices: []
       indices: 
       edges: []
@@ -138,8 +138,8 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 91c70fa1afe2599439a5e35e06dfae50
-    internalID: 1389879744
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
     vertices: []
     indices: 
     edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Dialogue_0: -7516342049021962738
+      DialogueArrow_0: 5932526129379059671
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

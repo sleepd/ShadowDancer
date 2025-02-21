@@ -5,6 +5,9 @@ using UnityEngine;
 using UnityEngine.VFX;
 public class PlayerController : MonoBehaviour
 {
+    public int hp {get => _currentHp;}
+    [SerializeField] private int _maxHp;
+    private int _currentHp;
     public float moveSpeed = 5f;
     public float jumpForce = 5f;
     public int maxJumpCount = 2;
@@ -44,6 +47,17 @@ public class PlayerController : MonoBehaviour
     private bool _preOnGround = true;
 
     private Vector2 _lastOnGroundPosition;
+    private bool _invincible = false;
+
+    // dash properties
+    [Header("Dash")]
+    private bool _dashPressed = false;
+    private int _dashCount = 0;
+    [SerializeField] private int _maxDashCount = 1;
+    [SerializeField] private float _dashSpeed = 10f;
+    [SerializeField] private float _dashDuration = 0.5f;
+    [SerializeField] private float _dashCooldown = 1f;
+    private float _dashCooldownTimer = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -51,6 +65,7 @@ public class PlayerController : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _sprite = transform.Find("Sprite").gameObject;
         _animator = _sprite.GetComponent<Animator>();
+        _currentHp = _maxHp;
     }
 
     // Update is called once per frame
@@ -60,29 +75,12 @@ public class PlayerController : MonoBehaviour
         OnGroundCheck();
         LandingCheck();
 
-        // jump
-        if (Input.GetButtonDown("Jump") && _jumpCooldownTimer <= 0)
-        {
-            if (_onGround)
-            {
-                _jumpPressed = true;
-                _jumpCount++;
-                Debug.Log("Jump");
-            }
+        // input check
+        ButtonCheck();
+        
+        
 
-            else if (_jumpCount < maxJumpCount)
-            {
-                _jumpPressed = true;
-                _jumpCount++;
-                Debug.Log("Double Jump");
-            }
-
-        }
-
-        if (_jumpCooldownTimer > 0)
-        {
-            _jumpCooldownTimer -= Time.deltaTime;
-        }
+        
 
 
         // fall
@@ -143,6 +141,12 @@ public class PlayerController : MonoBehaviour
             Jump();
             _jumpPressed = false;
         }
+
+        if (_dashPressed)
+        {
+            Dash();
+            _dashPressed = false;
+        }
     }
 
 
@@ -153,6 +157,13 @@ public class PlayerController : MonoBehaviour
         _animator.ResetTrigger("Landing");
         _animator.SetTrigger("JumpStart");
         _jumpCooldownTimer = _jumpCooldown;
+    }
+
+    void Dash()
+    {
+        _rb.linearVelocity = new Vector2(_rb.linearVelocity.x + _dashSpeed * faceing, 0);
+        _animator.ResetTrigger("Landing");
+        
     }
 
 
@@ -190,6 +201,7 @@ public class PlayerController : MonoBehaviour
             _animator.SetTrigger("Landing");
             Debug.Log("Landing");
             _jumpCount = 0;
+            _dashCount = 0;
             landingEffect.SendEvent("PlayerLanding");
             sfx.Play();
         }
@@ -206,6 +218,7 @@ public class PlayerController : MonoBehaviour
         {
             Vector2 safePosition = FindLastSafeGroundPosition();
             transform.position = safePosition;
+            TakeFallDamage();
         }
     }
 
@@ -248,22 +261,14 @@ public class PlayerController : MonoBehaviour
             RaycastHit2D rightCheck1 = Physics2D.Raycast(rightPoint1, Vector2.down, 0.3f, groundLayer);
             RaycastHit2D rightCheck2 = Physics2D.Raycast(rightPoint2, Vector2.down, 0.3f, groundLayer);
             
-            // Debug info 
-            Debug.DrawLine(leftPoint1, new Vector3(leftPoint1.x, leftPoint1.y - 0.3f, leftPoint1.z), Color.yellow);
-            Debug.DrawLine(leftPoint2, new Vector3(leftPoint2.x, leftPoint2.y - 0.3f, leftPoint2.z), Color.yellow);
-            Debug.DrawLine(rightPoint1, new Vector3(rightPoint1.x, rightPoint1.y - 0.3f, rightPoint1.z), Color.yellow);
-            Debug.DrawLine(rightPoint2, new Vector3(rightPoint2.x, rightPoint2.y - 0.3f, rightPoint2.z), Color.yellow);
-            
             // if both leftCheck1 and leftCheck2 are on the ground
             if (leftCheck1.collider != null && leftCheck2.collider != null)
             {
-                Debug.Log($"Found safe position on left at distance: {distance}");
                 safePosition.x = leftBasePosition.x;
                 break;
             }
             else if (rightCheck1.collider != null && rightCheck2.collider != null)
             {
-                Debug.Log($"Found safe position on right at distance: {distance}");
                 safePosition.x = rightBasePosition.x;
                 break;
             }
@@ -271,9 +276,81 @@ public class PlayerController : MonoBehaviour
             if (distance >= maxCheckDistance)
             {
                 Debug.LogWarning("No safe position found within range");
+                // should restart game here
             }
         }
         
         return safePosition;
     }
+
+    void TakeFallDamage()
+    {
+        int damage = _maxHp / 5;
+        _currentHp -= damage;
+        Debug.Log($"Take {damage} damage");
+        Debug.Log($"Current HP: {_currentHp}");
+        SetInvincible(1f);
+
+    }
+
+    void SetInvincible(float duration)
+    {
+        _invincible = true;
+        Invoke("ResetInvincible", duration);
+        _animator.SetBool("Twinkling", true);
+    }
+
+    void ResetInvincible()
+    {
+        _invincible = false;
+        _animator.SetBool("Twinkling", false);
+    }
+
+    void ButtonCheck()
+    {
+        // jump
+        if (Input.GetButtonDown("Jump") && _jumpCooldownTimer <= 0)
+        {
+            if (_onGround)
+            {
+                _jumpPressed = true;
+                _jumpCount++;
+                Debug.Log("Jump");
+            }
+
+            else if (_jumpCount < maxJumpCount)
+            {
+                _jumpPressed = true;
+                _jumpCount++;
+                Debug.Log("Double Jump");
+            }
+
+        }
+        if (_jumpCooldownTimer > 0)
+        {
+            _jumpCooldownTimer -= Time.deltaTime;
+        }
+
+        // dash
+        if (Input.GetButtonDown("Dash"))
+        {
+            if (_dashCooldownTimer <= 0 && _dashCount < _maxDashCount)
+            {
+                _dashPressed = true;
+                _dashCount++;
+                _dashCooldownTimer = _dashCooldown;
+                Debug.Log("Dash");
+            }
+        }
+        if (_dashCooldownTimer > 0)
+        {
+            _dashCooldownTimer -= Time.deltaTime;
+        }
+    }
+
+    public float GetHpPercentage()
+    {
+        return (float)_currentHp / _maxHp;
+    }
+        
 }

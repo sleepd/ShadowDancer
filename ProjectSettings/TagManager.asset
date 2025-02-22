@@ -50,6 +50,9 @@ TagManager:
   - name: Middleground
     uniqueID: 195564295
     locked: 0
+  - name: Character
+    uniqueID: 2415023675
+    locked: 0
   - name: 'Foreground '
     uniqueID: 344777369
     locked: 0

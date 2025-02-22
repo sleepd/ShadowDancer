@@ -58,6 +58,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _dashDuration = 0.5f;
     [SerializeField] private float _dashCooldown = 1f;
     private float _dashCooldownTimer = 0f;
+    private bool _dashing = false;
+
+    [SerializeField] PlayerGhostManager playerGhostManager;
+    [SerializeField] float ghostSpawnInterval = 0.05f;
 
     // Start is called before the first frame update
     void Start()
@@ -101,32 +105,37 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        float inputX = Input.GetAxisRaw("Horizontal");
-        inputX = Mathf.Abs(inputX) < 0.1f ? 0f : Mathf.Sign(inputX);
-        float inputY = Input.GetAxisRaw("Vertical");
-
-
-
-        _velocity = new Vector2(inputX * moveSpeed, _velocity.y);
-
-        if(inputX != 0)
+        if (!_dashing)
         {
-            _animator.SetBool("Running", true);
-            if(inputX < 0)
+            // movement input
+            float inputX = Input.GetAxisRaw("Horizontal");
+            inputX = Mathf.Abs(inputX) < 0.1f ? 0f : Mathf.Sign(inputX);
+            float inputY = Input.GetAxisRaw("Vertical");
+
+            _velocity = new Vector2(inputX * moveSpeed, _velocity.y);
+
+            if(inputX != 0)
             {
-                _sprite.transform.localScale = new Vector2(1, 1);
-                faceing = -1;
+                _animator.SetBool("Running", true);
+                if(inputX < 0)
+                {
+                    _sprite.transform.localScale = new Vector2(1, 1);
+                    faceing = -1;
+                }
+                if(inputX > 0)
+                {
+                    _sprite.transform.localScale = new Vector2(-1, 1);
+                    faceing = 1;
+                }
             }
-            if(inputX > 0)
+            else
             {
-                _sprite.transform.localScale = new Vector2(-1, 1);
-                faceing = 1;
+                _animator.SetBool("Running", false);
             }
         }
-        else
-        {
-            _animator.SetBool("Running", false);
-        }
+        
+
+
         _preVelocity = _velocity;
         _preOnGround = _onGround;
     }
@@ -144,7 +153,7 @@ public class PlayerController : MonoBehaviour
 
         if (_dashPressed)
         {
-            Dash();
+            StartCoroutine("Dash");
             _dashPressed = false;
         }
     }
@@ -159,11 +168,17 @@ public class PlayerController : MonoBehaviour
         _jumpCooldownTimer = _jumpCooldown;
     }
 
-    void Dash()
+    IEnumerator Dash()
     {
-        _rb.linearVelocity = new Vector2(_rb.linearVelocity.x + _dashSpeed * faceing, 0);
+        _dashing = true;
         _animator.ResetTrigger("Landing");
-        
+        float originalGravity = _rb.gravityScale;
+        _rb.gravityScale = 0;
+        _rb.linearVelocity = new Vector2(_dashSpeed * faceing, 0);
+        playerGhostManager.SpawnGhost(_dashDuration + 0.1f, ghostSpawnInterval);
+        yield return new WaitForSeconds(_dashDuration);
+        _rb.gravityScale = originalGravity;
+        _dashing = false;
     }
 
 

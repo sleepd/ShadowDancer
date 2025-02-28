@@ -75,6 +75,10 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.instance.isGamePaused)
+        {
+            return;
+        }
         _velocity = _rb.linearVelocity;
         OnGroundCheck();
         LandingCheck();
@@ -134,8 +138,6 @@ public class PlayerController : MonoBehaviour
             }
         }
         
-
-
         _preVelocity = _velocity;
         _preOnGround = _onGround;
     }

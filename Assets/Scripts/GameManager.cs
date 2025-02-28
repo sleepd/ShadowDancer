@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public bool isGamePaused { get => _isGamePaused;}
+    private bool _isGamePaused = false;
     // singleton instance
     public static GameManager instance 
     {
@@ -34,5 +36,15 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         
+    }
+    public void PauseGame()
+    {
+        Time.timeScale = 0;
+        _isGamePaused = true;
+    }
+    public void ResumeGame()
+    {
+        Time.timeScale = 1;
+        _isGamePaused = false;
     }
 }

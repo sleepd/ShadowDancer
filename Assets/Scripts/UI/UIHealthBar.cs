@@ -3,12 +3,13 @@ using UnityEngine.UI;
 public class UIHealthBar : MonoBehaviour
 {
     private Image healthBar;
-    [SerializeField] PlayerController characterController;
+    PlayerController characterController;
     [SerializeField] float maxWidth = 200f;
 
     void Start()
     {
         healthBar = GetComponent<Image>();
+        characterController = FindFirstObjectByType<PlayerController>();
     }
 
     // Update is called once per frame

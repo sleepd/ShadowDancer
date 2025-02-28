@@ -35,12 +35,13 @@ public class Lantern : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
+            // play animation
             _animator.SetTrigger("Burst");
+            // play sound
             sfx_burst.Play();
         }
         _visualEffect.SetVector3("BurstPosition", transform.position);
         _visualEffect.SendEvent("LanternBurst");
-
     }
 
     public void OnBurstEnd()
